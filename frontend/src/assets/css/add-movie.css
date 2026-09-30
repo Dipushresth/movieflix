@@ -1,0 +1,530 @@
+/* =========================================================
+   ADD MOVIE PAGE
+========================================================= */
+
+.add-movie-page {
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(229, 9, 20, 0.14),
+      transparent 35%
+    ),
+    #09090b;
+
+  color: #fff;
+
+  padding: 50px 24px 80px;
+}
+
+.add-movie-container {
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 0 auto;
+}
+
+/* Header */
+
+.add-movie-header {
+  margin-bottom: 30px;
+}
+
+.back-button {
+  border: none;
+  background: transparent;
+
+  color: #aaa;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  padding: 0;
+
+  margin-bottom: 28px;
+
+  transition: 0.2s;
+}
+
+.back-button:hover {
+  color: white;
+  transform: translateX(-3px);
+}
+
+.page-label {
+  color: #e50914;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  margin-bottom: 8px;
+}
+
+.add-movie-header h1 {
+  font-size: 36px;
+
+  margin: 0 0 8px;
+
+  font-weight: 700;
+}
+
+.page-description {
+  color: #888;
+
+  margin: 0;
+
+  font-size: 15px;
+}
+
+/* Main Card */
+
+.add-movie-card {
+  display: grid;
+
+  grid-template-columns: 280px 1fr;
+
+  gap: 45px;
+
+  background: #111113;
+
+  border: 1px solid #242428;
+
+  border-radius: 16px;
+
+  padding: 35px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* Poster */
+
+.poster-section {
+  position: sticky;
+
+  top: 30px;
+
+  align-self: start;
+}
+
+.poster-preview {
+  width: 100%;
+
+  aspect-ratio: 2 / 3;
+
+  background: #18181b;
+
+  border: 1px solid #29292e;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.poster-preview img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.poster-placeholder {
+  text-align: center;
+  color: #555;
+}
+
+.poster-placeholder span {
+  display: block;
+
+  font-size: 50px;
+
+  margin-bottom: 12px;
+}
+
+.poster-placeholder p {
+  margin: 0;
+
+  font-size: 15px;
+
+  color: #777;
+}
+
+.poster-placeholder small {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #4d4d52;
+}
+
+.poster-info {
+  margin-top: 18px;
+}
+
+.poster-info h3 {
+  font-size: 15px;
+
+  margin: 0 0 6px;
+}
+
+.poster-info p {
+  color: #777;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+
+  margin: 0;
+}
+
+/* Form */
+
+.movie-form {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+
+  color: #ddd;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  margin-bottom: 9px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  background: #19191d;
+
+  border: 1px solid #2b2b30;
+
+  border-radius: 8px;
+
+  color: white;
+
+  padding: 13px 14px;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: 0.2s;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #555;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #e50914;
+
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+
+  min-height: 120px;
+
+  font-family: inherit;
+}
+
+/* Year + Rating */
+
+.form-row {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 18px;
+}
+
+.rating-input {
+  display: flex;
+  align-items: center;
+
+  background: #19191d;
+
+  border: 1px solid #2b2b30;
+
+  border-radius: 8px;
+
+  overflow: hidden;
+}
+
+.rating-input span {
+  color: #f5c518;
+
+  font-size: 18px;
+
+  padding-left: 13px;
+}
+
+.rating-input input {
+  border: none;
+
+  background: transparent;
+
+  box-shadow: none !important;
+}
+
+.rating-input small {
+  color: #666;
+
+  padding-right: 13px;
+
+  white-space: nowrap;
+}
+
+/* Categories */
+
+.category-options {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.category-option {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+
+  flex-shrink: 0;
+
+  padding: 9px 14px;
+
+  border-radius: 7px;
+
+  background: #19191d;
+
+  border: 1px solid #2b2b30;
+
+  color: #999;
+
+  font-size: 13px;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.category-option:hover {
+  border-color: #555;
+  color: white;
+}
+
+.category-option.selected {
+  background: rgba(229, 9, 20, 0.12);
+
+  border-color: #e50914;
+
+  color: white;
+}
+
+.category-option input {
+  display: none;
+}
+
+.no-categories {
+  color: #666;
+  font-size: 13px;
+}
+
+/* Alerts */
+
+.form-alert {
+  padding: 12px 14px;
+
+  border-radius: 8px;
+
+  margin-bottom: 20px;
+
+  font-size: 14px;
+}
+
+.form-alert.error {
+  background: rgba(220, 38, 38, 0.1);
+
+  border: 1px solid rgba(220, 38, 38, 0.3);
+
+  color: #f87171;
+}
+
+.form-alert.success {
+  background: rgba(34, 197, 94, 0.1);
+
+  border: 1px solid rgba(34, 197, 94, 0.3);
+
+  color: #4ade80;
+}
+
+/* Buttons */
+
+.form-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  margin-top: 32px;
+
+  padding-top: 25px;
+
+  border-top: 1px solid #242428;
+}
+
+.cancel-button,
+.add-movie-button {
+  height: 44px;
+
+  padding: 0 20px;
+
+  border-radius: 7px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.cancel-button {
+  background: transparent;
+
+  color: #aaa;
+
+  border: 1px solid #333;
+}
+
+.cancel-button:hover {
+  color: white;
+  border-color: #555;
+}
+
+.add-movie-button {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  background: #e50914;
+
+  color: white;
+
+  border: none;
+
+  min-width: 140px;
+}
+
+.add-movie-button:hover {
+  background: #f6121d;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 8px 25px rgba(229, 9, 20, 0.25);
+}
+
+.add-movie-button:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+/* Loading */
+
+.spinner {
+  width: 14px;
+  height: 14px;
+
+  border: 2px solid rgba(255, 255, 255, 0.3);
+
+  border-top-color: white;
+
+  border-radius: 50%;
+
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 800px) {
+  .add-movie-card {
+    grid-template-columns: 1fr;
+  }
+
+  .poster-section {
+    position: static;
+
+    max-width: 240px;
+
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .add-movie-page {
+    padding: 30px 15px 50px;
+  }
+
+  .add-movie-card {
+    padding: 22px;
+
+    gap: 30px;
+  }
+
+  .add-movie-header h1 {
+    font-size: 28px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+
+    gap: 0;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .cancel-button,
+  .add-movie-button {
+    width: 100%;
+  }
+}

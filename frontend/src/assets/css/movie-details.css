@@ -1,0 +1,249 @@
+.movie-details-page {
+  min-height: calc(100vh - 70px);
+  background:
+    radial-gradient(circle at 75% 20%, rgba(229, 9, 20, 0.12), transparent 30%),
+    #0b0b0f;
+  color: white;
+  padding: 50px 60px 80px;
+}
+
+.movie-details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.back-button {
+  border: none;
+  background: transparent;
+  color: #aaa;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 30px;
+  transition: color 0.2s ease;
+}
+
+.back-button:hover {
+  color: white;
+}
+
+.movie-details-card {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 55px;
+  background: #15151b;
+  border: 1px solid #25252d;
+  border-radius: 16px;
+  padding: 35px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+}
+
+.movie-details-poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #222229;
+}
+
+.movie-details-poster img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.movie-details-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.movie-details-label {
+  margin: 0 0 12px;
+  color: #e50914;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+.movie-details-content h1 {
+  margin: 0 0 18px;
+  font-size: 52px;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.movie-details-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #999;
+  font-size: 15px;
+  margin-bottom: 25px;
+}
+
+.movie-details-rating {
+  color: #f5c518;
+  font-weight: 700;
+}
+
+.movie-details-description {
+  max-width: 700px;
+  margin: 0 0 25px;
+  color: #b5b5bd;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.movie-details-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 35px;
+}
+
+.movie-details-categories span {
+  padding: 7px 13px;
+  background: #24242c;
+  border: 1px solid #33333d;
+  border-radius: 20px;
+  color: #ddd;
+  font-size: 12px;
+}
+
+.movie-details-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.edit-movie-button,
+.back-movies-button {
+  height: 46px;
+  padding: 0 22px;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-movie-button {
+  border: none;
+  background: #e50914;
+  color: white;
+}
+
+.edit-movie-button:hover {
+  background: #f6121d;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(229, 9, 20, 0.25);
+}
+
+.back-movies-button {
+  border: 1px solid #36363f;
+  background: #222229;
+  color: white;
+}
+
+.back-movies-button:hover {
+  background: #2d2d35;
+  transform: translateY(-2px);
+}
+
+.movie-details-state {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  background: #0b0b0f;
+  color: #aaa;
+}
+
+.movie-details-state h2 {
+  margin: 0;
+  color: white;
+}
+
+.movie-details-state button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background: #e50914;
+  color: white;
+  cursor: pointer;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .movie-details-page {
+    padding: 40px 30px 60px;
+  }
+
+  .movie-details-card {
+    grid-template-columns: 280px 1fr;
+    gap: 35px;
+    padding: 25px;
+  }
+
+  .movie-details-content h1 {
+    font-size: 40px;
+  }
+
+  .movie-details-description {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+  .movie-details-page {
+    padding: 30px 20px 50px;
+  }
+
+  .movie-details-card {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 20px;
+  }
+
+  .movie-details-poster {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .movie-details-content h1 {
+    font-size: 34px;
+  }
+
+  .movie-details-content {
+    text-align: center;
+  }
+
+  .movie-details-meta {
+    justify-content: center;
+  }
+
+  .movie-details-description {
+    font-size: 14px;
+  }
+
+  .movie-details-categories {
+    justify-content: center;
+  }
+
+  .movie-details-actions {
+    justify-content: center;
+  }
+
+  .edit-movie-button,
+  .back-movies-button {
+    flex: 1;
+  }
+}

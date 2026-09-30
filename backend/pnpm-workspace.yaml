@@ -1,0 +1,6 @@
+allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': false
+  bcrypt: set this to true or false
+  better-sqlite3: true
+  prisma: false

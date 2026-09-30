@@ -1,0 +1,264 @@
+/* =========================
+   LOGIN PAGE
+========================= */
+
+.login-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(229, 9, 20, 0.18),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(120, 20, 30, 0.15),
+      transparent 35%
+    ),
+    #0b0b0f;
+}
+
+/* =========================
+   LOGIN CARD
+========================= */
+
+.login-card {
+  width: 100%;
+  max-width: 430px;
+  padding: 42px;
+  box-sizing: border-box;
+
+  background: #15151b;
+  border: 1px solid #27272f;
+  border-radius: 18px;
+
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+
+  color: #ffffff;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-logo {
+  margin-bottom: 24px;
+
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 2px;
+
+  color: #e50914;
+}
+
+.login-header h1 {
+  margin: 0 0 10px;
+
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  color: #ffffff;
+}
+
+.login-header p {
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  color: #9ca3af;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.login-error {
+  margin-bottom: 20px;
+  padding: 12px 14px;
+
+  border: 1px solid #7f1d1d;
+  border-radius: 8px;
+
+  background: #2a1114;
+  color: #fca5a5;
+
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+/* =========================
+   INPUT
+========================= */
+
+.login-field input {
+  width: 100%;
+  height: 48px;
+
+  padding: 0 14px;
+  box-sizing: border-box;
+
+  border: 1px solid #35353f;
+  border-radius: 9px;
+
+  outline: none;
+
+  background: #0f0f14;
+  color: #ffffff;
+
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.login-field input::placeholder {
+  color: #6b7280;
+}
+
+.login-field input:hover {
+  border-color: #4b4b57;
+}
+
+.login-field input:focus {
+  border-color: #e50914;
+
+  background: #111116;
+
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.12);
+}
+
+/* =========================
+   LOGIN BUTTON
+========================= */
+
+.login-button {
+  width: 100%;
+  height: 48px;
+
+  margin-top: 4px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #e50914;
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.login-button:hover:not(:disabled) {
+  background: #f40612;
+
+  box-shadow: 0 8px 20px rgba(229, 9, 20, 0.25);
+}
+
+.login-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.login-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.login-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
+  margin-top: 28px;
+
+  font-size: 13px;
+  color: #8b8b96;
+}
+
+.login-footer a {
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+.login-footer a:hover {
+  color: #e50914;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 500px) {
+  .login-page {
+    padding: 20px 14px;
+  }
+
+  .login-card {
+    padding: 30px 22px;
+    border-radius: 14px;
+  }
+
+  .login-header h1 {
+    font-size: 26px;
+  }
+
+  .login-logo {
+    font-size: 21px;
+  }
+
+  .login-footer {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
