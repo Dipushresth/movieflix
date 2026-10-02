@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import MovieCard from "../components/MovieCard";
+import { useMovies } from "../hooks/useMovies";
+import { useCategories } from "../hooks/useCategories";
 
 function MovieSection({ title, movies, onViewAll, getCategoryName }) {
   return (
@@ -36,46 +37,25 @@ function MovieSection({ title, movies, onViewAll, getCategoryName }) {
 
 function Home() {
   const navigate = useNavigate();
+  const {
+    data: moviesResponse,
+    error: moviesError,
+    isLoading: moviesLoading,
+  } = useMovies();
+  const {
+    data: categoriesResponse,
+    error: categoriesError,
+    isLoading: categoriesLoading,
+  } = useCategories();
 
-  const [movies, setMovies] = useState([]);
-  const [categories, setCategories] = useState([]);
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [moviesResponse, categoriesResponse] = await Promise.all([
-          fetch("http://localhost:3000/movies"),
-          fetch("http://localhost:3000/categories"),
-        ]);
-
-        const moviesData = await moviesResponse.json();
-        const categoriesData = await categoriesResponse.json();
-
-        if (!moviesResponse.ok) {
-          setError("Failed to load movies");
-          return;
-        }
-
-        if (!categoriesResponse.ok) {
-          setError("Failed to load categories");
-          return;
-        }
-
-        setMovies(moviesData.data);
-        setCategories(categoriesData.data);
-      } catch (error) {
-        console.log(error);
-        setError("Unable to connect to server");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
+  const movies = moviesResponse?.data || [];
+  const categories = categoriesResponse?.data || [];
+  const loading = moviesLoading || categoriesLoading;
+  const error = moviesError
+    ? "Failed to load movies"
+    : categoriesError
+      ? "Failed to load categories"
+      : "";
 
   const getCategoryName = (categoryId) => {
     const category = categories.find((category) => category.id === categoryId);
