@@ -9,14 +9,13 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
-app.use(express.json());
 app.use(express.json({ limit: "10mb" }));
 
 app.use(
@@ -25,7 +24,7 @@ app.use(
     limit: "10mb",
   }),
 );
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("/tmp/uploads"));
 app.use("/", authRouter);
 app.use("/", movieRouter);
 app.use("/", categoryRouter);
@@ -36,10 +35,5 @@ app.get("/", (req, res) => {
   });
 });
 
-//development mode
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
-});
-
 //prod
-// export default app;
+export default app;

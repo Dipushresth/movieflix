@@ -95,21 +95,38 @@ export async function getMovie(req, res) {
 export async function updateMovie(req, res) {
   try {
     const { id } = req.params;
+
     const { title, description, year, rating, category_ids, image } = req.body;
 
-    const updateData = {
-      title,
-      description,
-      year: Number(year),
-      rating: Number(rating),
-      categoryIds: Array.isArray(category_ids)
-        ? category_ids
-        : JSON.parse(category_ids || "[]"),
-    };
+    const updateData = {};
 
+    // Only update fields that were provided
+    if (title !== undefined) {
+      updateData.title = title;
+    }
+
+    if (description !== undefined) {
+      updateData.description = description;
+    }
+
+    if (year !== undefined) {
+      updateData.year = Number(year);
+    }
+
+    if (rating !== undefined) {
+      updateData.rating = Number(rating);
+    }
+
+    if (category_ids !== undefined) {
+      updateData.categoryIds = Array.isArray(category_ids)
+        ? category_ids
+        : JSON.parse(category_ids || "[]");
+    }
+
+    // Image upload
     if (req.file) {
       updateData.image = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-    } else if (image) {
+    } else if (image !== undefined) {
       updateData.image = image;
     }
 
@@ -133,11 +150,3 @@ export async function updateMovie(req, res) {
     });
   }
 }
-// export async function patchMovie(req, res) {
-//   try {
-//     const { id } = req.params;
-//     console.log(id);
-//   } catch (err) {
-//     console.log("error", err);
-//   }
-// }
