@@ -16,7 +16,6 @@ app.use(
   }),
 );
 
-app.use(express.json());
 app.use(express.json({ limit: "10mb" }));
 
 app.use(
@@ -25,7 +24,7 @@ app.use(
     limit: "10mb",
   }),
 );
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("/tmp/uploads"));
 app.use("/", authRouter);
 app.use("/", movieRouter);
 app.use("/", categoryRouter);

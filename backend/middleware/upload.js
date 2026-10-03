@@ -3,7 +3,9 @@ import path from "path";
 import fs from "fs";
 
 // Create uploads folder if it doesn't exist
-const uploadDir = "uploads";
+// const uploadDir = "uploads";
+//for vercel deploy temporary folder
+const uploadDir = "/tmp/uploads";
 
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
