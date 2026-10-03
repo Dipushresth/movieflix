@@ -36,10 +36,5 @@ app.get("/", (req, res) => {
   });
 });
 
-//development mode
-// app.listen(3000, () => {
-//   console.log("Server running on port 3000");
-// });
-
 //prod
 export default app;
