@@ -1,32 +1,8 @@
 import multer from "multer";
-import path from "path";
-import fs from "fs";
 
-// Create uploads folder if it doesn't exist
-// const uploadDir = "uploads";
-//for vercel deploy temporary folder
-const uploadDir = "/tmp/uploads";
+// Storing uploaded file temporarily in memory
+const storage = multer.memoryStorage();
 
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Where files will be stored
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-
-  filename: function (req, file, cb) {
-    const uniqueName = `${Date.now()}-${Math.round(
-      Math.random() * 1e9,
-    )}${path.extname(file.originalname)}`;
-
-    cb(null, uniqueName);
-  },
-});
-
-// Only allow image files
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);

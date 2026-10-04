@@ -1,12 +1,15 @@
 import prisma from "../prismaClient/client.js";
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 
 // Create movie
 export async function createMovie(req, res) {
   try {
     const { title, description, year, rating, category_ids } = req.body;
-    const image = req.file
-      ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
-      : req.body.image || null;
+    let image = req.body.image || null;
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer);
+      image = result.secure_url;
+    }
 
     if (!title || !image || !year || !rating || !category_ids) {
       return res.status(400).json({
@@ -22,7 +25,6 @@ export async function createMovie(req, res) {
         year: Number(year),
         rating: Number(rating),
         categoryIds: category_ids || [],
-        image,
       },
     });
 
@@ -95,12 +97,8 @@ export async function getMovie(req, res) {
 export async function updateMovie(req, res) {
   try {
     const { id } = req.params;
-
     const { title, description, year, rating, category_ids, image } = req.body;
-
     const updateData = {};
-
-    // Only update fields that were provided
     if (title !== undefined) {
       updateData.title = title;
     }
@@ -123,13 +121,12 @@ export async function updateMovie(req, res) {
         : JSON.parse(category_ids || "[]");
     }
 
-    // Image upload
     if (req.file) {
-      updateData.image = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+      const result = await uploadToCloudinary(req.file.buffer);
+      updateData.image = result.secure_url;
     } else if (image !== undefined) {
       updateData.image = image;
     }
-
     const movie = await prisma.movie.update({
       where: {
         id,
