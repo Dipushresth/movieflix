@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useRegister } from "../hooks/useRegister";
 
 function Register() {
   const navigate = useNavigate();
@@ -10,9 +11,9 @@ function Register() {
     password: "",
   });
 
-  const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const registerMutation = useRegister();
 
   const handleChange = (e) => {
     setFormData({
@@ -21,47 +22,33 @@ function Register() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    setError("");
     setSuccess("");
-    setLoading(true);
 
-    try {
-      const response = await fetch("http://localhost:3000/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+    registerMutation.mutate(formData, {
+      onSuccess: () => {
+        setSuccess("Registration successful!");
 
-      const data = await response.json();
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+        });
 
-      if (!response.ok) {
-        setError(data.message || "Registration failed");
-        return;
-      }
-
-      setSuccess("Registration successful!");
-
-      setFormData({
-        name: "",
-        email: "",
-        password: "",
-      });
-
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
-    } catch (error) {
-      console.log(error);
-      setError("Unable to connect to server");
-    } finally {
-      setLoading(false);
-    }
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      },
+    });
   };
+
+  const loading = registerMutation.isPending;
+
+  const error = registerMutation.error
+    ? registerMutation.error.message || "Registration failed"
+    : "";
 
   return (
     <div className="auth-page">

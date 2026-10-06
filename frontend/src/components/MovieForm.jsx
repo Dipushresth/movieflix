@@ -19,7 +19,7 @@ function MovieForm({
     image: initialData?.image || "",
     year: initialData?.year || "",
     rating: initialData?.rating || "",
-    category_ids: initialData?.categoryIds || [],
+    categoryIds: initialData?.categoryIds || [],
   }));
 
   // Stores the actual selected image file
@@ -29,6 +29,7 @@ function MovieForm({
 
   // Handle normal input changes
   const handleChange = (e) => {
+    console.log("INPUT CHANGE target value:", e.target);
     const { name, value } = e.target;
 
     setFormData((prev) => ({
@@ -67,18 +68,18 @@ function MovieForm({
   // Handle category selection
   const handleCategoryChange = (categoryId) => {
     setFormData((prev) => {
-      const alreadySelected = prev.category_ids.includes(categoryId);
+      const alreadySelected = prev.categoryIds.includes(categoryId);
 
       if (alreadySelected) {
         return {
           ...prev,
-          category_ids: prev.category_ids.filter((id) => id !== categoryId),
+          categoryIds: prev.categoryIds.filter((id) => id !== categoryId),
         };
       }
 
       return {
         ...prev,
-        category_ids: [...prev.category_ids, categoryId],
+        categoryIds: [...prev.categoryIds, categoryId],
       };
     });
   };
@@ -86,28 +87,26 @@ function MovieForm({
   // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setSuccess("");
-
-    // Create multipart/form-data
+    // Creating multipart/form-data
+    console.log("FORM DATA ENTRIES from MovieForm.js:");
     const data = new FormData();
-
     data.append("title", formData.title);
     data.append("description", formData.description);
     data.append("year", formData.year);
     data.append("rating", formData.rating);
 
-    data.append("category_ids", JSON.stringify(formData.category_ids));
+    data.append("categoryIds", JSON.stringify(formData.categoryIds));
 
-    // If user selected a local file
     if (imageFile) {
       data.append("image", imageFile);
-    }
-    // Otherwise send the image URL
-    else if (formData.image) {
+    } else if (formData.image) {
       data.append("image", formData.image);
     }
 
+    for (const [key, value] of data.entries()) {
+      console.log(key, value);
+    }
     await onSubmit(data, setSuccess);
   };
 
@@ -294,9 +293,7 @@ function MovieForm({
                   <p className="no-categories">No categories available.</p>
                 ) : (
                   categories.map((category) => {
-                    const selected = formData.category_ids.includes(
-                      category.id,
-                    );
+                    const selected = formData.categoryIds.includes(category.id);
 
                     return (
                       <label

@@ -11,8 +11,6 @@ function MovieCard({ movie, getCategoryName, onDelete }) {
 
   const isAdmin = user?.role === "admin";
 
-  console.log("MOVIE IMAGE:", movie.image);
-
   const handleMenuClick = (e) => {
     // Prevent movie card click
     e.stopPropagation();

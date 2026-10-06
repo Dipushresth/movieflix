@@ -4,8 +4,6 @@ import prisma from "../../prismaClient/client.js";
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("login email", email);
-
     if (!email || !password) {
       return res.status(400).json({
         message: "Email and password are required",

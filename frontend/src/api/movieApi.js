@@ -11,13 +11,14 @@ export const getMovie = (id) => {
 export const createMovie = (movieData) => {
   return apiClient("/movies", {
     method: "POST",
-    body: JSON.stringify(movieData),
+    body: movieData,
   });
 };
-export const updateMovie = (id, movieData) => {
+
+export const updateMovie = ({ id, formData }) => {
   return apiClient(`/movies/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(movieData),
+    method: "PATCH",
+    body: formData,
   });
 };
 

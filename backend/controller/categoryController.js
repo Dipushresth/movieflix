@@ -27,11 +27,6 @@ export async function category(req, res) {
 // Get all categories
 export async function getCategories(req, res) {
   try {
-    console.log("MONGODB_URL exists:", !!process.env.MONGODB_URL);
-    console.log(
-      "MONGODB_URL starts with:",
-      process.env.MONGODB_URL?.substring(0, 14),
-    );
     const categories = await prisma.category.findMany({
       orderBy: {
         name: "asc",

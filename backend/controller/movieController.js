@@ -4,19 +4,27 @@ import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 // Create movie
 export async function createMovie(req, res) {
   try {
-    const { title, description, year, rating, category_ids } = req.body;
+    const { title, description, year, rating, categoryIds } = req.body;
+
     let image = req.body.image || null;
     if (req.file) {
       const result = await uploadToCloudinary(req.file.buffer);
       image = result.secure_url;
     }
 
-    if (!title || !image || !year || !rating || !category_ids) {
+    if (!title || !image || !year || !rating || !categoryIds) {
       return res.status(400).json({
-        message: "Required movie fields are missing",
+        message: "movie fields are missing",
       });
     }
 
+    if (!categoryIds) {
+      return res.status(400).json({
+        message: "Category IDs are required",
+      });
+    }
+
+    const parsedCategoryIds = JSON.parse(categoryIds);
     const movie = await prisma.movie.create({
       data: {
         title,
@@ -24,7 +32,7 @@ export async function createMovie(req, res) {
         image,
         year: Number(year),
         rating: Number(rating),
-        categoryIds: category_ids || [],
+        categoryIds: parsedCategoryIds || [],
       },
     });
 
@@ -34,7 +42,6 @@ export async function createMovie(req, res) {
     });
   } catch (error) {
     console.log("CREATE MOVIE ERROR:", error);
-
     res.status(500).json({
       message: "Failed to create movie",
       error: error.message,
@@ -67,7 +74,6 @@ export async function getMovies(req, res) {
 export async function getMovie(req, res) {
   try {
     const { id } = req.params;
-
     const movie = await prisma.movie.findUnique({
       where: {
         id,
@@ -85,7 +91,6 @@ export async function getMovie(req, res) {
     });
   } catch (error) {
     console.log("GET MOVIE ERROR:", error);
-
     res.status(500).json({
       message: "Failed to get movie",
       error: error.message,
@@ -97,7 +102,9 @@ export async function getMovie(req, res) {
 export async function updateMovie(req, res) {
   try {
     const { id } = req.params;
-    const { title, description, year, rating, category_ids, image } = req.body;
+    const { title, description, year, rating, categoryIds, image } = req.body;
+    console.log("UPDATE MOVIE REQ.BODY:", req.body);
+    console.log("UPDATE MOVIE REQ.FILE:", req.file);
     const updateData = {};
     if (title !== undefined) {
       updateData.title = title;
@@ -115,10 +122,10 @@ export async function updateMovie(req, res) {
       updateData.rating = Number(rating);
     }
 
-    if (category_ids !== undefined) {
-      updateData.categoryIds = Array.isArray(category_ids)
-        ? category_ids
-        : JSON.parse(category_ids || "[]");
+    if (categoryIds !== undefined) {
+      updateData.categoryIds = Array.isArray(categoryIds)
+        ? categoryIds
+        : JSON.parse(categoryIds || "[]");
     }
 
     if (req.file) {

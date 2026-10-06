@@ -2,58 +2,35 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import MovieCard from "../components/MovieCard";
+import { useMovies } from "../hooks/useMovies";
+import { useCategories } from "../hooks/useCategories";
 
 function MovieList() {
   const navigate = useNavigate();
-
-  const [movies, setMovies] = useState([]);
-  const [categories, setCategories] = useState([]);
-
   const [search, setSearch] = useState("");
 
   // Multiple categories
   const [selectedCategories, setSelectedCategories] = useState([]);
-
   const [sortBy, setSortBy] = useState("year");
   const [sortOrder, setSortOrder] = useState("desc");
+  const {
+    data: moviesResponse,
+    error: moviesError,
+    isLoading: moviesLoading,
+  } = useMovies();
+  const {
+    data: categoriesResponse,
+    error: categoriesError,
+    isLoading: categoriesLoading,
+  } = useCategories();
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  // Fetch movies + categories
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [moviesResponse, categoriesResponse] = await Promise.all([
-          fetch("http://localhost:3000/movies"),
-          fetch("http://localhost:3000/categories"),
-        ]);
-
-        const moviesData = await moviesResponse.json();
-        const categoriesData = await categoriesResponse.json();
-
-        if (!moviesResponse.ok) {
-          setError("Failed to load movies");
-          return;
-        }
-
-        if (!categoriesResponse.ok) {
-          setError("Failed to load categories");
-          return;
-        }
-
-        setMovies(moviesData.data);
-        setCategories(categoriesData.data);
-      } catch (error) {
-        console.log(error);
-        setError("Unable to connect to server");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
+  const categories = categoriesResponse?.data || [];
+  const loading = moviesLoading || categoriesLoading;
+  const error = moviesError
+    ? "Failed to load movies"
+    : categoriesError
+      ? "Failed to load categories"
+      : "";
 
   // Get category name
   const getCategoryName = (categoryId) => {
@@ -75,11 +52,8 @@ function MovieList() {
 
   // Filter + sort movies
   const filteredMovies = useMemo(() => {
+    const movies = moviesResponse?.data || [];
     let result = [...movies];
-
-    // -------------------------
-    // SEARCH
-    // -------------------------
     if (search.trim()) {
       const searchText = search.toLowerCase().trim();
 
@@ -88,9 +62,6 @@ function MovieList() {
       );
     }
 
-    // -------------------------
-    // CATEGORY
-    // -------------------------
     if (selectedCategories.length > 0) {
       result = result.filter((movie) =>
         selectedCategories.some((categoryId) =>
@@ -99,9 +70,6 @@ function MovieList() {
       );
     }
 
-    // -------------------------
-    // SORT
-    // -------------------------
     result.sort((a, b) => {
       let valueA;
       let valueB;
@@ -130,7 +98,7 @@ function MovieList() {
     });
 
     return result;
-  }, [movies, search, selectedCategories, sortBy, sortOrder]);
+  }, [moviesResponse, search, selectedCategories, sortBy, sortOrder]);
 
   // Clear everything
   const clearFilters = () => {

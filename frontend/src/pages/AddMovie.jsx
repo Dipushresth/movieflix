@@ -1,76 +1,51 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MovieForm from "../components/MovieForm";
+import { useCategories } from "../hooks/useCategories";
+import { useCreateMovie } from "../hooks/useMovies";
 
 function AddMovie() {
   const navigate = useNavigate();
 
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const {
+    data: categoriesResponse,
+    error: categoriesError,
+    isLoading: categoriesLoading,
+  } = useCategories();
+  const categories = categoriesResponse?.data || [];
+  const loading = categoriesLoading;
 
-  useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const response = await fetch("http://localhost:3000/categories");
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          setError(data.message || "Failed to load categories");
-          return;
-        }
-
-        setCategories(data.data);
-      } catch (error) {
-        console.log(error);
-        setError("Unable to connect to server");
-      }
-    }
-
-    fetchCategories();
-  }, []);
-
+  const moviesMutation = useCreateMovie();
   const handleSubmit = async (formData, setSuccess) => {
-    setError("");
-    setLoading(true);
+    moviesMutation.mutate(formData, {
+      onSuccess: (data) => {
+        setSuccess("Movie created successfully!");
+        setTimeout(() => {
+          navigate(`/movies/${data.data.id}`);
+        }, 1000);
+      },
+      onError: (error) => {
+        console.log("CREATE MOVIE ERROR:", error);
+        console.log("ERROR MESSAGE:", error.message);
+        console.log("ERROR OBJECT:", error);
 
-    try {
-      const response = await fetch("http://localhost:3000/movies", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.message || "Failed to create movie");
-        return;
-      }
-
-      setSuccess("Movie added successfully!");
-
-      setTimeout(() => {
-        navigate("/movies");
-      }, 1000);
-    } catch (error) {
-      console.log(error);
-      setError("Unable to connect to server");
-    } finally {
-      setLoading(false);
-    }
+        alert(error.message || "Failed to create movie");
+      },
+    });
   };
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+  if (categoriesError) {
+    return <p>Failed to load categories: {categoriesError.message}</p>;
+  }
 
   return (
     <MovieForm
       mode="add"
       categories={categories}
       onSubmit={handleSubmit}
-      loading={loading}
-      error={error}
+      loading={moviesMutation.isPending}
+      error={moviesMutation.error?.message || ""}
     />
   );
 }

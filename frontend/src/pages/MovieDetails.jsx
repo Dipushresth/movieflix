@@ -1,44 +1,29 @@
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useMovie } from "../hooks/useMovies";
+import { useCategories } from "../hooks/useCategories";
 
 function MovieDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const {
+    data: movieResponse,
+    error: movieError,
+    isLoading: movieLoading,
+  } = useMovie(id);
 
-  const [movie, setMovie] = useState(null);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [movieResponse, categoriesResponse] = await Promise.all([
-          fetch(`http://localhost:3000/movies/${id}`),
-          fetch("http://localhost:3000/categories"),
-        ]);
-
-        const movieData = await movieResponse.json();
-        const categoriesData = await categoriesResponse.json();
-
-        if (!movieResponse.ok) {
-          setError(movieData.message || "Movie not found");
-          return;
-        }
-
-        setMovie(movieData.data);
-        setCategories(categoriesData.data);
-      } catch (error) {
-        console.log(error);
-        setError("Unable to connect to server");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, [id]);
-
+  const {
+    data: categoriesResponse,
+    error: categoriesError,
+    isLoading: categoriesLoading,
+  } = useCategories();
+  const movie = movieResponse?.data || null;
+  const categories = categoriesResponse?.data || [];
+  const loading = movieLoading || categoriesLoading;
+  const error = movieError
+    ? "Failed to Load movie"
+    : categoriesError
+      ? "Failed to Load categories"
+      : "";
   const getCategoryName = (categoryId) => {
     const category = categories.find((category) => category.id === categoryId);
 
@@ -53,6 +38,15 @@ function MovieDetails() {
     return (
       <div className="movie-details-state">
         <h2>{error}</h2>
+
+        <button onClick={() => navigate("/movies")}>Back to Movies</button>
+      </div>
+    );
+  }
+  if (!movie) {
+    return (
+      <div className="movie-details-state">
+        <h2>Movie not found</h2>
 
         <button onClick={() => navigate("/movies")}>Back to Movies</button>
       </div>
@@ -89,7 +83,7 @@ function MovieDetails() {
             </p>
 
             <div className="movie-details-categories">
-              {movie.categoryIds.map((categoryId) => {
+              {movie.categoryIds?.map((categoryId) => {
                 const categoryName = getCategoryName(categoryId);
 
                 if (!categoryName) return null;
