@@ -54,7 +54,11 @@ export async function getMovies(req, res) {
   try {
     console.log("GET /movies started");
 
-    const movies = await prisma.movie.findMany();
+    const movies = await prisma.movie.findMany({
+      orderBy: {
+        rating: "desc",
+      },
+    });
 
     console.log("MOVIES FETCHED:", movies.length);
 
