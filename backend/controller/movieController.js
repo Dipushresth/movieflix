@@ -52,20 +52,21 @@ export async function createMovie(req, res) {
 // Get all movies
 export async function getMovies(req, res) {
   try {
-    const movies = await prisma.movie.findMany({
-      orderBy: {
-        year: "desc",
-      },
-    });
+    console.log("GET /movies started");
 
-    res.status(200).json({
+    const movies = await prisma.movie.findMany();
+
+    console.log("MOVIES FETCHED:", movies.length);
+
+    return res.status(200).json({
       data: movies,
     });
   } catch (error) {
-    console.log(error);
+    console.error("GET MOVIES ERROR:", error);
 
-    res.status(500).json({
-      message: "Failed to get movies",
+    return res.status(500).json({
+      message: "Failed to fetch movies",
+      error: error.message,
     });
   }
 }
