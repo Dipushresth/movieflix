@@ -42,6 +42,15 @@ export function useUpdateMovie() {
     },
   });
 }
+// export function usePatchMovie() {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: patchMovie,
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["movies"] });
+//     },
+//   });
+// }
 
 export function useDeleteMovie() {
   const queryClient = useQueryClient();

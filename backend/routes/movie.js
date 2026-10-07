@@ -5,6 +5,7 @@ import {
   getMovies,
   getMovie,
   updateMovie,
+  patchMovie,
 } from "../controller/movieController.js";
 import upload from "../middleware/upload.js";
 
@@ -16,6 +17,6 @@ router.get("/movies", getMovies);
 
 router.get("/movies/:id", getMovie);
 
-router.patch("/movies/:id", upload.single("image"), updateMovie);
+router.put("/movies/:id", upload.single("image"), updateMovie);
 
 export default router;

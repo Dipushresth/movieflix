@@ -10,9 +10,7 @@ function MovieForm({
   error = "",
 }) {
   const navigate = useNavigate();
-
   const isEdit = mode === "edit";
-
   const [formData, setFormData] = useState(() => ({
     title: initialData?.title || "",
     description: initialData?.description || "",
@@ -22,12 +20,8 @@ function MovieForm({
     categoryIds: initialData?.categoryIds || [],
   }));
 
-  // Stores the actual selected image file
   const [imageFile, setImageFile] = useState(null);
-
   const [success, setSuccess] = useState("");
-
-  // Handle normal input changes
   const handleChange = (e) => {
     console.log("INPUT CHANGE target value:", e.target);
     const { name, value } = e.target;
@@ -37,20 +31,15 @@ function MovieForm({
       [name]: value,
     }));
 
-    // If user starts entering a URL,
-    // remove any previously selected local file
+    // removing any previously selected local file
     if (name === "image") {
       setImageFile(null);
     }
   };
 
-  // Handle local image selection
   const handleImageBrowse = (e) => {
     const file = e.target.files[0];
-
     if (!file) return;
-
-    // Only allow images
     if (!file.type.startsWith("image/")) {
       alert("Please select an image file.");
       return;
@@ -58,14 +47,13 @@ function MovieForm({
 
     setImageFile(file);
 
-    // Clear URL because local file is now selected
+    // Clearing URL as local file is seclected now
     setFormData((prev) => ({
       ...prev,
       image: "",
     }));
   };
 
-  // Handle category selection
   const handleCategoryChange = (categoryId) => {
     setFormData((prev) => {
       const alreadySelected = prev.categoryIds.includes(categoryId);
@@ -110,7 +98,6 @@ function MovieForm({
     await onSubmit(data, setSuccess);
   };
 
-  // Image preview
   const getImagePreview = () => {
     // New local image selected
     if (imageFile) {
@@ -130,7 +117,6 @@ function MovieForm({
   return (
     <div className="add-movie-page">
       <div className="add-movie-container">
-        {/* Back button */}
         <button
           className="back-button"
           onClick={() => navigate(-1)}
@@ -139,7 +125,6 @@ function MovieForm({
           ← Back
         </button>
 
-        {/* Header */}
         <div className="add-movie-header">
           <p className="page-label">MOVIE MANAGEMENT</p>
 
@@ -152,14 +137,11 @@ function MovieForm({
           </p>
         </div>
 
-        {/* Alerts */}
         {error && <div className="form-alert error">{error}</div>}
 
         {success && <div className="form-alert success">{success}</div>}
 
-        {/* Main Card */}
         <div className="add-movie-card">
-          {/* LEFT - POSTER */}
           <div className="poster-section">
             <div className="poster-preview">
               {imagePreview ? (
@@ -185,9 +167,8 @@ function MovieForm({
             </div>
           </div>
 
-          {/* RIGHT - FORM */}
+          {/* FORM */}
           <form className="movie-form" onSubmit={handleSubmit}>
-            {/* Title */}
             <div className="form-group">
               <label>Movie Title</label>
 
@@ -201,10 +182,8 @@ function MovieForm({
               />
             </div>
 
-            {/* Description */}
             <div className="form-group">
               <label>Description</label>
-
               <textarea
                 name="description"
                 value={formData.description}
@@ -214,11 +193,8 @@ function MovieForm({
               />
             </div>
 
-            {/* Image */}
             <div className="form-group">
               <label>Poster Image</label>
-
-              {/* Image URL */}
               <input
                 type="text"
                 name="image"
@@ -232,7 +208,6 @@ function MovieForm({
                 <span>OR</span>
               </div>
 
-              {/* Local image */}
               <input
                 type="file"
                 accept="image/*"
@@ -244,9 +219,7 @@ function MovieForm({
               </small>
             </div>
 
-            {/* Year + Rating */}
             <div className="form-row">
-              {/* Year */}
               <div className="form-group">
                 <label>Release Year</label>
 
@@ -260,13 +233,10 @@ function MovieForm({
                 />
               </div>
 
-              {/* Rating */}
               <div className="form-group">
                 <label>Rating</label>
-
                 <div className="rating-input">
                   <span>★</span>
-
                   <input
                     type="number"
                     name="rating"
@@ -284,10 +254,8 @@ function MovieForm({
               </div>
             </div>
 
-            {/* Categories */}
             <div className="form-group">
               <label>Categories</label>
-
               <div className="category-list">
                 {categories.length === 0 ? (
                   <p className="no-categories">No categories available.</p>
@@ -316,7 +284,6 @@ function MovieForm({
               </div>
             </div>
 
-            {/* Buttons */}
             <div className="form-actions">
               <button
                 type="button"

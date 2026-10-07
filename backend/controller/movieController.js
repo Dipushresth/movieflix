@@ -104,12 +104,10 @@ export async function getMovie(req, res) {
 }
 
 // Update movie
-export async function updateMovie(req, res) {
+export async function patchMovie(req, res) {
   try {
     const { id } = req.params;
     const { title, description, year, rating, categoryIds, image } = req.body;
-    console.log("UPDATE MOVIE REQ.BODY:", req.body);
-    console.log("UPDATE MOVIE REQ.FILE:", req.file);
     const updateData = {};
     if (title !== undefined) {
       updateData.title = title;
@@ -151,7 +149,65 @@ export async function updateMovie(req, res) {
       data: movie,
     });
   } catch (error) {
-    console.error("UPDATE MOVIE ERROR:", error);
+    console.error("PATCH MOVIE ERROR:", error);
+
+    res.status(500).json({
+      message: "Failed to patch movie",
+      error: error.message,
+    });
+  }
+}
+
+//update movie
+export async function updateMovie(req, res) {
+  try {
+    const { id } = req.params;
+    const { title, description, year, rating, categoryIds, image } = req.body;
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
+    // Required fields
+    if (
+      !title ||
+      !description ||
+      year === undefined ||
+      rating === undefined ||
+      !categoryIds ||
+      !image
+    ) {
+      return res.status(400).json({
+        message: "All movie fields are required",
+      });
+    }
+
+    let movieImage = image || null;
+
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer);
+      movieImage = result.secure_url;
+    }
+
+    const parsedCategoryIds = Array.isArray(categoryIds)
+      ? categoryIds
+      : JSON.parse(categoryIds);
+
+    const movie = await prisma.movie.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        year: Number(year),
+        rating: Number(rating),
+        categoryIds: parsedCategoryIds,
+        image: movieImage,
+      },
+    });
+
+    res.status(200).json({
+      message: "Movie updated successfully",
+      data: movie,
+    });
+  } catch (error) {
+    console.error("PUT MOVIE ERROR:", error);
 
     res.status(500).json({
       message: "Failed to update movie",
