@@ -17,10 +17,17 @@ export const createMovie = (movieData) => {
 
 export const updateMovie = ({ id, formData }) => {
   return apiClient(`/movies/${id}`, {
-    method: "PATCH",
+    method: "PUT",
     body: formData,
   });
 };
+
+// export const patchMovie = ({ id, formData }) => {
+//   return apiClient(`/movies/${id}`, {
+//     method: "PATCH",
+//     body: formData,
+//   });
+// };
 
 export const deleteMovie = (id) => {
   return apiClient(`/movies/${id}`, {
