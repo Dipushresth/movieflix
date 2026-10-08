@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function MovieForm({
@@ -11,30 +11,40 @@ function MovieForm({
 }) {
   const navigate = useNavigate();
   const isEdit = mode === "edit";
-  const [formData, setFormData] = useState(() => ({
-    title: initialData?.title || "",
-    description: initialData?.description || "",
-    image: initialData?.image || "",
-    year: initialData?.year || "",
-    rating: initialData?.rating || "",
-    categoryIds: initialData?.categoryIds || [],
-  }));
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    image: "",
+    year: "",
+    rating: "",
+    categoryIds: [],
+  });
 
   const [imageFile, setImageFile] = useState(null);
   const [success, setSuccess] = useState("");
-  const handleChange = (e) => {
-    console.log("INPUT CHANGE target value:", e.target);
-    const { name, value } = e.target;
 
+  // Loading movie data when fetched from the API
+  useEffect(() => {
+    if (!initialData) return;
+
+    setFormData({
+      title: initialData.title || "",
+      description: initialData.description || "",
+      image: initialData.image || "",
+      year: initialData.year || "",
+      rating: initialData.rating || "",
+      categoryIds: initialData.categoryIds || [],
+    });
+
+    // Clear previously selected local image
+    setImageFile(null);
+  }, [initialData]);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-
-    // removing any previously selected local file
-    if (name === "image") {
-      setImageFile(null);
-    }
   };
 
   const handleImageBrowse = (e) => {
@@ -44,7 +54,6 @@ function MovieForm({
       alert("Please select an image file.");
       return;
     }
-
     setImageFile(file);
 
     // Clearing URL as local file is seclected now
@@ -72,18 +81,20 @@ function MovieForm({
     });
   };
 
-  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess("");
-    // Creating multipart/form-data
-    console.log("FORM DATA ENTRIES from MovieForm.js:");
+
+    if (!formData.image && !imageFile) {
+      alert("Please enter an image URL or browse an image.");
+      return;
+    }
+
     const data = new FormData();
     data.append("title", formData.title);
     data.append("description", formData.description);
     data.append("year", formData.year);
     data.append("rating", formData.rating);
-
     data.append("categoryIds", JSON.stringify(formData.categoryIds));
 
     if (imageFile) {
@@ -92,9 +103,6 @@ function MovieForm({
       data.append("image", formData.image);
     }
 
-    for (const [key, value] of data.entries()) {
-      console.log(key, value);
-    }
     await onSubmit(data, setSuccess);
   };
 
@@ -201,7 +209,6 @@ function MovieForm({
                 value={formData.image}
                 onChange={handleChange}
                 placeholder="https://example.com/poster.jpg"
-                required={!imageFile}
               />
 
               <div className="image-or">

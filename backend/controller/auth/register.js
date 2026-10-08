@@ -3,7 +3,8 @@ import prisma from "../../prismaClient/client.js";
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, password } = req.body;
+    const email = req.body.email?.trim().toLowerCase();
 
     if (!name || !email || !password) {
       return res.status(400).json({

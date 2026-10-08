@@ -3,32 +3,23 @@ import { useNavigate } from "react-router-dom";
 
 function MovieCard({ movie, getCategoryName, onDelete }) {
   const navigate = useNavigate();
-
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // Get logged-in user
   const user = JSON.parse(localStorage.getItem("user"));
-
   const isAdmin = user?.role === "admin";
 
   const handleMenuClick = (e) => {
-    // Prevent movie card click
     e.stopPropagation();
-
     setMenuOpen((prev) => !prev);
   };
 
   const handleDelete = async (e) => {
     e.stopPropagation();
-
     setMenuOpen(false);
-
     const confirmed = window.confirm(
       `Are you sure you want to delete "${movie.title}"?`,
     );
 
     if (!confirmed) return;
-
     await onDelete(movie.id);
   };
 

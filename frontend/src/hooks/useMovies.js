@@ -24,7 +24,6 @@ export function useMovie(id) {
 }
 export function useCreateMovie() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: createMovie,
     onSuccess: () => {

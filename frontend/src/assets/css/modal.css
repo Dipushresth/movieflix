@@ -1,0 +1,71 @@
+.edit-movie-page {
+  padding: 30px;
+}
+
+.movie-preview {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.movie-preview-image {
+  width: 220px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.movie-preview-content {
+  flex: 1;
+}
+
+.movie-preview-content h1 {
+  margin-bottom: 15px;
+}
+
+.movie-preview-content p {
+  margin-bottom: 20px;
+}
+
+.watch-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.video-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+}
+
+.video-modal-content {
+  position: relative;
+
+  width: 80%;
+  max-width: 900px;
+
+  background: #000;
+  padding: 10px;
+}
+
+.video-close {
+  position: absolute;
+  right: 10px;
+  top: -40px;
+
+  border: none;
+  background: transparent;
+  color: white;
+
+  font-size: 24px;
+  cursor: pointer;
+}

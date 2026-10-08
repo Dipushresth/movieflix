@@ -22,3 +22,8 @@ textarea {
 a {
   text-decoration: none;
 }
+
+.btn {
+  min-width: 130px;
+  border-radius: 10px;
+}

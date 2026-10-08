@@ -74,12 +74,8 @@ function Home() {
   };
 
   const popularMovies = movies.slice(0, 10);
-
   const adventureMovies = getMoviesByCategory("Adventure");
-
-  // Your database currently has "Thriler"
   const thrillerMovies = getMoviesByCategory("Thriler");
-
   const sciFiMovies = getMoviesByCategory("Sci-Fi");
 
   if (loading) {
@@ -119,45 +115,45 @@ function Home() {
         </div>
 
         <div className="hero-overlay"></div>
+        <div className="wrapper">
+          <div className="hero-text">
+            <span className="hero-label">WELCOME TO MOVIEFLIX</span>
 
-        <div className="hero-text">
-          <span className="hero-label">WELCOME TO MOVIEFLIX</span>
+            <h1>
+              Discover Your
+              <br />
+              <span>Next Movie.</span>
+            </h1>
 
-          <h1>
-            Discover Your
-            <br />
-            <span>Next Movie.</span>
-          </h1>
+            <p className="hero-description">
+              Explore a collection of movies, discover new favorites, and find
+              something great to watch.
+            </p>
 
-          <p className="hero-description">
-            Explore a collection of movies, discover new favorites, and find
-            something great to watch.
-          </p>
+            <div className="hero-buttons">
+              <button
+                className="watch-button"
+                onClick={() => {
+                  if (movies.length > 0) {
+                    navigate(`/movies/${movies[0].id}`);
+                  }
+                }}
+              >
+                ▶ Watch Now
+              </button>
 
-          <div className="hero-buttons">
-            <button
-              className="watch-button"
-              onClick={() => {
-                if (movies.length > 0) {
-                  navigate(`/movies/${movies[0].id}`);
-                }
-              }}
-            >
-              ▶ Watch Now
-            </button>
-
-            <button
-              className="browse-button"
-              onClick={() => navigate("/movies")}
-            >
-              Browse Movies
-            </button>
+              <button
+                className="browse-button"
+                onClick={() => navigate("/movies")}
+              >
+                Browse Movies
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* MOVIE SECTIONS */}
-      <main className="movie-content">
+      <main className="movie-content wrapper">
         {/* Popular */}
         <section className="movie-section">
           <div className="section-header">
