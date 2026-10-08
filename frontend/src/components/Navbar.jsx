@@ -1,89 +1,62 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
+import { useCurrentUser } from "../hooks/useCurrentUser";
+
+import "../assets/css/navbar.css";
+import ProfileDropdown from "./ProfileDropdown";
 
 function Navbar() {
-  const navigate = useNavigate();
+  const { data, isLoading } = useCurrentUser();
+  const user = data?.data;
 
-  const [profileOpen, setProfileOpen] = useState(false);
+  if (isLoading) {
+    return (
+      <header className="navbar">
+        <div className="navbar-container">
+          <Link to="/" className="navbar-logo">
+            MOVIEFLIX
+          </Link>
+        </div>
+      </header>
+    );
+  }
 
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  const handleLogout = () => {
-    // Remove logged-in user
-    localStorage.removeItem("user");
-
-    // If you store a token separately, remove it too
-    localStorage.removeItem("token");
-    localStorage.removeItem("accessToken");
-
-    // Close dropdown
-    setProfileOpen(false);
-
-    // Go to login
-    navigate("/login");
-  };
+  const isAuthenticated = !!user;
 
   return (
-    <nav className="movie-navbar">
-      {/* LOGO */}
-      <Link to="/" className="movie-logo">
-        MOVIEFLIX
-      </Link>
-
-      {/* NAV LINKS */}
-      <div className="movie-nav-links">
-        <Link to="/" className="movie-nav-link">
-          Home
+    <header className="navbar">
+      <div className="navbar-container">
+        <Link to="/" className="navbar-logo">
+          MOVIEFLIX
         </Link>
 
-        <Link to="/movies" className="movie-nav-link">
-          Movies
-        </Link>
+        {!isAuthenticated && (
+          <nav className="navbar-menu">
+            <Link to="/login" className="navbar-signin">
+              Sign In
+            </Link>
+          </nav>
+        )}
 
-        <Link to="/add-movie" className="movie-nav-link">
-          Add Movie
-        </Link>
+        {isAuthenticated && (
+          <nav className="navbar-menu">
+            <Link to="/" className="navbar-link">
+              Home
+            </Link>
 
-        {/* PROFILE */}
-        <div className="profile-container">
-          <button
-            className="profile-button"
-            onClick={() => setProfileOpen((prev) => !prev)}
-            aria-label="Open profile menu"
-          >
-            {/* PROFILE ICON */}
-            <span className="profile-icon">👤</span>
-          </button>
+            <Link to="/movies" className="navbar-link">
+              Movies
+            </Link>
 
-          {/* DROPDOWN */}
-          {profileOpen && (
-            <div className="profile-dropdown">
-              {/* PROFILE INFO */}
-              <div className="profile-info">
-                <div className="profile-avatar">👤</div>
+            <Link to="/categories" className="navbar-link">
+              Categories
+            </Link>
 
-                <div className="profile-details">
-                  <strong>{user?.name || "User"}</strong>
-
-                  <span>{user?.email || "No email"}</span>
-
-                  {user?.role && <small>{user.role}</small>}
-                </div>
-              </div>
-
-              {/* DIVIDER */}
-              <div className="profile-divider"></div>
-
-              {/* LOGOUT */}
-              <button className="profile-logout" onClick={handleLogout}>
-                <span>↪</span>
-                Logout
-              </button>
-            </div>
-          )}
-        </div>
+            <ProfileDropdown user={user} />
+          </nav>
+        )}
       </div>
-    </nav>
+    </header>
   );
 }
 

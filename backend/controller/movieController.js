@@ -60,8 +60,6 @@ export async function getMovies(req, res) {
       },
     });
 
-    console.log("MOVIES FETCHED:", movies.length);
-
     return res.status(200).json({
       data: movies,
     });
@@ -163,16 +161,13 @@ export async function updateMovie(req, res) {
   try {
     const { id } = req.params;
     const { title, description, year, rating, categoryIds, image } = req.body;
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
-    // Required fields
     if (
       !title ||
       !description ||
       year === undefined ||
       rating === undefined ||
       !categoryIds ||
-      !image
+      (!image && !req.file)
     ) {
       return res.status(400).json({
         message: "All movie fields are required",
@@ -211,6 +206,34 @@ export async function updateMovie(req, res) {
 
     res.status(500).json({
       message: "Failed to update movie",
+      error: error.message,
+    });
+  }
+}
+
+export async function deleteMovie(req, res) {
+  try {
+    const { id } = req.params;
+    const movie = await prisma.movie.findUnique({
+      where: [id],
+    });
+    if (!movie) {
+      return res.status(404).json({
+        message: "Movie not found",
+      });
+    }
+    await prisma.movie.delete({
+      where: {
+        id,
+      },
+    });
+    return res.status(200).json({
+      message: "Movie deleted successfully",
+    });
+  } catch (error) {
+    console.error("DELETE MOVIE ERROR:", error);
+    return res.status(500).json({
+      message: "Failed to delete movie",
       error: error.message,
     });
   }

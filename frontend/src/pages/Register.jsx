@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import { useRegister } from "../hooks/useRegister";
+
+import "../assets/css/auth.css";
 
 function Register() {
   const navigate = useNavigate();
-
+  const registerMutation = useRegister();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -12,9 +15,6 @@ function Register() {
   });
 
   const [success, setSuccess] = useState("");
-
-  const registerMutation = useRegister();
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -24,9 +24,7 @@ function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     setSuccess("");
-
     registerMutation.mutate(formData, {
       onSuccess: () => {
         setSuccess("Registration successful!");
@@ -45,58 +43,67 @@ function Register() {
   };
 
   const loading = registerMutation.isPending;
-
   const error = registerMutation.error
     ? registerMutation.error.message || "Registration failed"
     : "";
 
   return (
-    <div className="auth-page">
-      <div className="auth-box">
-        <h1>Create Account</h1>
+    <main className="auth-page">
+      <section className="auth-card">
+        <div className="auth-header">
+          <div className="auth-logo">MOVIEFLIX</div>
 
-        <p className="auth-subtitle">Create your movie account</p>
+          <h1>Create Account</h1>
 
-        {error && <p className="error-message">{error}</p>}
+          <p>Create your account and start watching movies.</p>
+        </div>
 
-        {success && <p className="success-message">{success}</p>}
+        {error && <div className="auth-error">{error}</div>}
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Name</label>
+        {success && <div className="auth-success">{success}</div>}
+
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="auth-field">
+            <label htmlFor="name">Name</label>
 
             <input
+              id="name"
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
               placeholder="Enter your name"
+              autoComplete="name"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label>Email</label>
+          <div className="auth-field">
+            <label htmlFor="email">Email</label>
 
             <input
+              id="email"
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email"
+              autoComplete="email"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label>Password</label>
+          <div className="auth-field">
+            <label htmlFor="password">Password</label>
 
             <input
+              id="password"
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Enter your password"
+              placeholder="Create a password"
+              autoComplete="new-password"
               required
             />
           </div>
@@ -106,11 +113,13 @@ function Register() {
           </button>
         </form>
 
-        <p className="auth-footer">
-          Already have an account? <Link to="/login">Login</Link>
-        </p>
-      </div>
-    </div>
+        <div className="auth-footer">
+          <span>Already have an account?</span>
+
+          <Link to="/login">Login</Link>
+        </div>
+      </section>
+    </main>
   );
 }
 

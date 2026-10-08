@@ -11,11 +11,27 @@ datasource db {
   url      = env("MONGODB_URL")
 }
 
+enum Role {
+  USER
+  STAFF
+  ADMIN
+}
+
 model User {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   name       String
   email      String   @unique
   password   String
+  role       Role     @default(USER)
+  created_at DateTime @default(now())
+}
+
+model RefreshToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  user_id    String   @db.ObjectId
+  token_hash String   @unique
+  expires_at DateTime
+  revoked    Boolean  @default(false)
   created_at DateTime @default(now())
 }
 
@@ -34,3 +50,4 @@ model Category {
   name    String  @unique
 
 }
+

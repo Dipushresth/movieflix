@@ -1,15 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import MovieCard from "../components/MovieCard";
 import { useMovies } from "../hooks/useMovies";
 import { useCategories } from "../hooks/useCategories";
 
-function MovieList() {
+function MovieList({ currentUser }) {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-
-  // Multiple categories
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [sortBy, setSortBy] = useState("year");
   const [sortOrder, setSortOrder] = useState("desc");
@@ -32,31 +30,28 @@ function MovieList() {
       ? "Failed to load categories"
       : "";
 
-  // Get category name
+  const canAddMovie =
+    currentUser?.role === "ADMIN" || currentUser?.role === "STAFF";
   const getCategoryName = (categoryId) => {
     const category = categories.find((category) => category.id === categoryId);
 
     return category?.name || "";
   };
 
-  // Select / unselect category
   const handleCategoryChange = (categoryId) => {
     setSelectedCategories((prev) => {
       if (prev.includes(categoryId)) {
         return prev.filter((id) => id !== categoryId);
       }
-
       return [...prev, categoryId];
     });
   };
 
-  // Filter + sort movies
   const filteredMovies = useMemo(() => {
     const movies = moviesResponse?.data || [];
     let result = [...movies];
     if (search.trim()) {
       const searchText = search.toLowerCase().trim();
-
       result = result.filter((movie) =>
         movie.title.toLowerCase().includes(searchText),
       );
@@ -100,7 +95,6 @@ function MovieList() {
     return result;
   }, [moviesResponse, search, selectedCategories, sortBy, sortOrder]);
 
-  // Clear everything
   const clearFilters = () => {
     setSearch("");
     setSelectedCategories([]);
@@ -119,7 +113,6 @@ function MovieList() {
       <Navbar />
 
       <main className="movies-container">
-        {/* HEADER */}
         <section className="movies-header">
           <div>
             <p className="movies-label">MOVIE LIBRARY</p>
@@ -131,13 +124,15 @@ function MovieList() {
             </p>
           </div>
 
-          <button
-            className="movies-add-button"
-            onClick={() => navigate("/add-movie")}
-          >
-            <span>＋</span>
-            Add Movie
-          </button>
+          {canAddMovie && (
+            <button
+              className="movies-add-button"
+              onClick={() => navigate("/add-movie")}
+            >
+              <span>＋</span>
+              Add Movie
+            </button>
+          )}
         </section>
 
         {/* SEARCH */}
@@ -162,9 +157,7 @@ function MovieList() {
 
         {/* MAIN FILTER + MOVIES LAYOUT */}
         <div className="movies-layout">
-          {/* LEFT SIDEBAR */}
           <aside className="movies-sidebar">
-            {/* SIDEBAR HEADER */}
             <div className="sidebar-header">
               <h3>Filter Movies</h3>
 

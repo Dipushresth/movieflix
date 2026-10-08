@@ -1,7 +1,9 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.js";
+import userRouter from "./routes/userRouter.js";
 import movieRouter from "./routes/movie.js";
 import categoryRouter from "./routes/category.js";
 
@@ -24,8 +26,10 @@ app.use(
     limit: "10mb",
   }),
 );
-app.use("/uploads", express.static("/tmp/uploads"));
+
+app.use(cookieParser());
 app.use("/", authRouter);
+app.use("/", userRouter);
 app.use("/", movieRouter);
 app.use("/", categoryRouter);
 
@@ -36,8 +40,8 @@ app.get("/", (req, res) => {
 });
 
 //development mode
-// app.listen(3000, () => {
-//   console.log("Server running on port 3000");
+// app.listen(process.env.PORT, () => {
+//   console.log(`Server running on port ${process.env.PORT}`);
 // });
 //prod
 export default app;

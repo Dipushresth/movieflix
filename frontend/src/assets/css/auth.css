@@ -1,0 +1,158 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  background: #141414;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  border-radius: 10px;
+  background: #1f1f1f;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.auth-logo {
+  margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #e50914;
+}
+
+.auth-header h1 {
+  margin: 0 0 10px;
+  font-size: 28px;
+  color: #ffffff;
+}
+
+.auth-header p {
+  margin: 0;
+  color: #a7a7a7;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.auth-field label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.auth-field input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  outline: none;
+  background: #2b2b2b;
+  color: #ffffff;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.auth-field input::placeholder {
+  color: #888;
+}
+
+.auth-field input:focus {
+  border-color: #e50914;
+}
+
+.auth-button {
+  width: 100%;
+  margin-top: 6px;
+  padding: 13px;
+  border: none;
+  border-radius: 5px;
+  background: #e50914;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.auth-button:hover:not(:disabled) {
+  background: #b20710;
+}
+
+.auth-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-error,
+.auth-success {
+  margin-bottom: 18px;
+  padding: 11px 13px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.auth-error {
+  background: rgba(229, 9, 20, 0.12);
+  border: 1px solid rgba(229, 9, 20, 0.35);
+  color: #ff6b73;
+}
+
+.auth-success {
+  background: rgba(46, 160, 67, 0.12);
+  border: 1px solid rgba(46, 160, 67, 0.35);
+  color: #5ee27a;
+}
+
+.auth-footer {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 24px;
+  font-size: 14px;
+  color: #999;
+}
+
+.auth-footer a {
+  color: #ffffff;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .auth-page {
+    padding: 16px;
+  }
+
+  .auth-card {
+    padding: 30px 22px;
+  }
+
+  .auth-header h1 {
+    font-size: 24px;
+  }
+}
