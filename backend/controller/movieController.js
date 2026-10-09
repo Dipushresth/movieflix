@@ -215,7 +215,7 @@ export async function deleteMovie(req, res) {
   try {
     const { id } = req.params;
     const movie = await prisma.movie.findUnique({
-      where: [id],
+      where: { id: id },
     });
     if (!movie) {
       return res.status(404).json({
