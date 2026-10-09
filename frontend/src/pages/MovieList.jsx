@@ -1,29 +1,42 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 import Navbar from "../components/Navbar";
 import MovieCard from "../components/MovieCard";
-import { useMovies } from "../hooks/useMovies";
+
+import { useMovies, useDeleteMovie } from "../hooks/useMovies";
+
 import { useCategories } from "../hooks/useCategories";
 
 function MovieList({ currentUser }) {
   const navigate = useNavigate();
+
   const [search, setSearch] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [sortBy, setSortBy] = useState("year");
   const [sortOrder, setSortOrder] = useState("desc");
+
   const {
     data: moviesResponse,
     error: moviesError,
     isLoading: moviesLoading,
   } = useMovies();
+
   const {
     data: categoriesResponse,
     error: categoriesError,
     isLoading: categoriesLoading,
   } = useCategories();
 
+  // TanStack Query delete mutation.
+  const deleteMovieMutation = useDeleteMovie();
+
   const categories = categoriesResponse?.data || [];
+  const movies = moviesResponse?.data || [];
+
   const loading = moviesLoading || categoriesLoading;
+
   const error = moviesError
     ? "Failed to load movies"
     : categoriesError
@@ -32,6 +45,10 @@ function MovieList({ currentUser }) {
 
   const canAddMovie =
     currentUser?.role === "ADMIN" || currentUser?.role === "STAFF";
+
+  // Only admins can see the three-dot menu.
+  const isAdmin = currentUser?.role === "ADMIN";
+
   const getCategoryName = (categoryId) => {
     const category = categories.find((category) => category.id === categoryId);
 
@@ -43,15 +60,36 @@ function MovieList({ currentUser }) {
       if (prev.includes(categoryId)) {
         return prev.filter((id) => id !== categoryId);
       }
+
       return [...prev, categoryId];
     });
   };
 
+  // Delete using the TanStack Query hook.
+  const handleDelete = async (movieId) => {
+    try {
+      await deleteMovieMutation.mutateAsync(movieId);
+
+      toast.success("Movie deleted successfully!");
+    } catch (error) {
+      console.error("Failed to delete movie:", error);
+
+      toast.error(error?.message || "Failed to delete movie.");
+
+      throw error;
+    }
+  };
+
+  const handleEdit = (movie) => {
+    navigate(`/edit-movie/${movie.id}`);
+  };
+
   const filteredMovies = useMemo(() => {
-    const movies = moviesResponse?.data || [];
     let result = [...movies];
+
     if (search.trim()) {
       const searchText = search.toLowerCase().trim();
+
       result = result.filter((movie) =>
         movie.title.toLowerCase().includes(searchText),
       );
@@ -80,20 +118,19 @@ function MovieList({ currentUser }) {
         valueB = Number(b.year);
       }
 
-      if (sortOrder === "asc") {
-        if (valueA < valueB) return -1;
-        if (valueA > valueB) return 1;
-        return 0;
+      if (valueA < valueB) {
+        return sortOrder === "asc" ? -1 : 1;
       }
 
-      if (valueA < valueB) return 1;
-      if (valueA > valueB) return -1;
+      if (valueA > valueB) {
+        return sortOrder === "asc" ? 1 : -1;
+      }
 
       return 0;
     });
 
     return result;
-  }, [moviesResponse, search, selectedCategories, sortBy, sortOrder]);
+  }, [movies, search, selectedCategories, sortBy, sortOrder]);
 
   const clearFilters = () => {
     setSearch("");
@@ -116,9 +153,7 @@ function MovieList({ currentUser }) {
         <section className="movies-header">
           <div>
             <p className="movies-label">MOVIE LIBRARY</p>
-
             <h1>Explore Movies</h1>
-
             <p className="movies-subtitle">
               Discover your favorite movies and find something new to watch.
             </p>
@@ -155,7 +190,7 @@ function MovieList({ currentUser }) {
           </div>
         </section>
 
-        {/* MAIN FILTER + MOVIES LAYOUT */}
+        {/* FILTER + MOVIES LAYOUT */}
         <div className="movies-layout">
           <aside className="movies-sidebar">
             <div className="sidebar-header">
@@ -214,6 +249,7 @@ function MovieList({ currentUser }) {
             {/* SORT ORDER */}
             <div className="sidebar-section">
               <h4>Order</h4>
+
               <div className="sort-buttons">
                 <button
                   className={sortOrder === "asc" ? "active" : ""}
@@ -231,7 +267,7 @@ function MovieList({ currentUser }) {
               </div>
             </div>
 
-            {/* CLEAR */}
+            {/* CLEAR FILTERS */}
             <button
               className="sidebar-clear-button"
               onClick={clearFilters}
@@ -241,9 +277,8 @@ function MovieList({ currentUser }) {
             </button>
           </aside>
 
-          {/* RIGHT SIDE - MOVIES */}
+          {/* MOVIE RESULTS */}
           <section className="movies-results">
-            {/* RESULT BAR */}
             <div className="movies-result-bar">
               <div>
                 <strong>{filteredMovies.length}</strong>{" "}
@@ -277,7 +312,6 @@ function MovieList({ currentUser }) {
             {loading && (
               <div className="movies-state">
                 <div className="loading-spinner"></div>
-
                 <p>Loading movies...</p>
               </div>
             )}
@@ -286,9 +320,7 @@ function MovieList({ currentUser }) {
             {error && (
               <div className="movies-state error">
                 <div className="state-icon">⚠</div>
-
                 <h3>Something went wrong</h3>
-
                 <p>{error}</p>
               </div>
             )}
@@ -297,9 +329,7 @@ function MovieList({ currentUser }) {
             {!loading && !error && filteredMovies.length === 0 && (
               <div className="movies-state">
                 <div className="state-icon">🎬</div>
-
                 <h3>No movies found</h3>
-
                 <p>Try changing your search or category filters.</p>
 
                 <button className="reset-button" onClick={clearFilters}>
@@ -308,7 +338,7 @@ function MovieList({ currentUser }) {
               </div>
             )}
 
-            {/* MOVIES */}
+            {/* MOVIE CARDS */}
             {!loading && !error && filteredMovies.length > 0 && (
               <div className="movies-grid">
                 {filteredMovies.map((movie) => (
@@ -316,6 +346,9 @@ function MovieList({ currentUser }) {
                     key={movie.id}
                     movie={movie}
                     getCategoryName={getCategoryName}
+                    isAdmin={isAdmin}
+                    onDelete={handleDelete}
+                    onEdit={handleEdit}
                   />
                 ))}
               </div>

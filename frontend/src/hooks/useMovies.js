@@ -53,10 +53,18 @@ export function useUpdateMovie() {
 
 export function useDeleteMovie() {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: deleteMovie,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["movies"] });
+
+    onSuccess: (_data, movieId) => {
+      queryClient.invalidateQueries({
+        queryKey: ["movies"],
+      });
+
+      queryClient.removeQueries({
+        queryKey: ["movie", movieId],
+      });
     },
   });
 }
