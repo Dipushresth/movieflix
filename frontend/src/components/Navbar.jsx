@@ -6,8 +6,9 @@ import "../assets/css/navbar.css";
 import ProfileDropdown from "./ProfileDropdown";
 
 function Navbar() {
-  const { data, isLoading } = useCurrentUser();
-  const user = data?.data;
+  const { data: user, isLoading } = useCurrentUser();
+
+  console.log("user on navbar", user);
 
   if (isLoading) {
     return (
