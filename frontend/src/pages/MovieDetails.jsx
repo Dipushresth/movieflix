@@ -9,6 +9,7 @@ function MovieDetails({ currentUser }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [showVideo, setShowVideo] = useState(false);
+  console.log("current user on movie detail", currentUser);
 
   const {
     data: movieResponse,

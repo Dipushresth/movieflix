@@ -1,99 +1,71 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function MovieCard({ movie, getCategoryName, onDelete }) {
+function MovieCard({ movie, isAdmin, onEdit, onDelete }) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const user = JSON.parse(localStorage.getItem("user"));
-  const isAdmin = user?.role === "admin";
-
-  const handleMenuClick = (e) => {
-    e.stopPropagation();
-    setMenuOpen((prev) => !prev);
-  };
-
-  const handleDelete = async (e) => {
-    e.stopPropagation();
-    setMenuOpen(false);
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${movie.title}"?`,
-    );
-
-    if (!confirmed) return;
-    await onDelete(movie.id);
-  };
 
   return (
-    <article
-      className="listing-movie-card"
-      onClick={() => navigate(`/movies/${movie.id}`)}
-    >
-      <div className="listing-poster">
-        <img src={movie.image} alt={movie.title} />
+    <div className="movie-card">
+      {/* Three-dot menu: admin only */}
+      {isAdmin && (
+        <div className="movie-menu">
+          <button
+            type="button"
+            className="movie-menu-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setMenuOpen((prev) => !prev);
+            }}
+            aria-label="Movie options"
+            aria-expanded={menuOpen}
+          >
+            ⋮
+          </button>
 
-        {/* THREE DOT MENU - ADMIN ONLY */}
-        {isAdmin && (
-          <div className="movie-menu">
-            <button
-              className="movie-menu-button"
-              onClick={handleMenuClick}
-              aria-label="Movie options"
-            >
-              ⋮
-            </button>
-
-            {menuOpen && (
-              <div
-                className="movie-menu-dropdown"
-                onClick={(e) => e.stopPropagation()}
+          {menuOpen && (
+            <div className="movie-menu-dropdown">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpen(false);
+                  onEdit(movie);
+                }}
               >
-                <button className="movie-delete-option" onClick={handleDelete}>
-                  🗑 Delete
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+                Edit
+              </button>
 
-        {/* RATING */}
-        <div className="listing-rating">
-          <span>★</span>
-          {movie.rating}
+              <button
+                type="button"
+                className="delete-option"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpen(false);
+                  onDelete(movie.id);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </div>
+      )}
 
-        {/* OVERLAY */}
-        <div className="poster-overlay">
-          <span>View Details</span>
-        </div>
-      </div>
+      {/* Movie content */}
+      <div
+        className="movie-card-content"
+        onClick={() => navigate(`/movies/${movie.id}`)}
+      >
+        <img src={movie.image} alt={movie.title} className="movie-card-image" />
 
-      <div className="listing-info">
-        <h3>{movie.title}</h3>
-
-        <div className="listing-meta">
-          <span>{movie.year}</span>
-
-          <span className="meta-dot">•</span>
-
-          <span>
-            {movie.categoryIds.length}{" "}
-            {movie.categoryIds.length === 1 ? "category" : "categories"}
-          </span>
-        </div>
-
-        <p>{movie.description || "No description available."}</p>
-
-        <div className="listing-categories">
-          {movie.categoryIds.slice(0, 2).map((categoryId) => {
-            const categoryName = getCategoryName(categoryId);
-
-            if (!categoryName) return null;
-
-            return <span key={categoryId}>{categoryName}</span>;
-          })}
+        <div className="movie-card-info">
+          <h3>{movie.title}</h3>
+          <p>{movie.year}</p>
+          <p>⭐ {movie.rating}</p>
         </div>
       </div>
-    </article>
+    </div>
   );
 }
 

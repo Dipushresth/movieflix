@@ -328,6 +328,9 @@
   line-height: 1.6;
 }
 
+.movie-section {
+  margin-bottom: 30px;
+}
 .movies-add-button {
   display: flex;
   align-items: center;
@@ -1174,6 +1177,9 @@
 @media (min-width: 1200px) {
   .wrapper {
     min-width: 87.5rem;
+  }
+  .movie-section {
+    margin-bottom: 50px;
   }
 }
 

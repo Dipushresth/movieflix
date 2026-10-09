@@ -8,9 +8,10 @@ import MovieList from "./pages/MovieList";
 import MovieDetails from "./pages/MovieDetails";
 import EditMovie from "./pages/EditMovie";
 import { useAuthBootstrap } from "./hooks/useAuthBootstrap";
-
+import { useCurrentUser } from "./hooks/useCurrentUser";
 function App() {
-  const { isInitializing, currentUser } = useAuthBootstrap();
+  const { isInitializing } = useAuthBootstrap();
+  const { data: currentUser } = useCurrentUser();
   if (isInitializing) {
     return <div>Loading...</div>;
   }

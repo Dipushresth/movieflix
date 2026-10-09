@@ -1,33 +1,34 @@
 import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { refresh, getCurrentUser } from "../api/authApi";
-
 import { setAccessToken, clearAccessToken } from "../api/client";
 
 export const useAuthBootstrap = () => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const queryClient = useQueryClient();
   const [isInitializing, setIsInitializing] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
+    let cancelled = false;
 
     const bootstrapAuth = async () => {
       try {
         const refreshResponse = await refresh();
-        const newAccessToken = refreshResponse.accessToken;
-        setAccessToken(newAccessToken);
-
+        setAccessToken(refreshResponse.accessToken);
         const userResponse = await getCurrentUser();
-        if (isMounted) {
-          setCurrentUser(userResponse.data);
+        const user = userResponse.data;
+
+        if (!cancelled) {
+          queryClient.setQueryData(["currentUser"], user);
         }
       } catch (error) {
         clearAccessToken();
-        if (isMounted) {
-          setCurrentUser(null);
+
+        if (!cancelled) {
+          queryClient.setQueryData(["currentUser"], null);
         }
       } finally {
-        if (isMounted) {
+        if (!cancelled) {
           setIsInitializing(false);
         }
       }
@@ -36,12 +37,9 @@ export const useAuthBootstrap = () => {
     bootstrapAuth();
 
     return () => {
-      isMounted = false;
+      cancelled = true;
     };
-  }, []);
+  }, [queryClient]);
 
-  return {
-    currentUser,
-    isInitializing,
-  };
+  return { isInitializing };
 };
